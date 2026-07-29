@@ -1,12 +1,11 @@
-/* =====================================================
-   RASPADINHA PREMIADA
+/* ==========================================================
+   RASPADINHA DA AMIZADE
    Service Worker
-   Versão 1.0.0
-===================================================== */
+========================================================== */
 
-const CACHE_NAME = "raspadinha-v1.0.0";
+const CACHE_NAME = "raspadinha-amizade-v1.0.0";
 
-const ARQUIVOS = [
+const FILES_TO_CACHE = [
 
     "./",
 
@@ -18,12 +17,11 @@ const ARQUIVOS = [
     "./css/animations.css",
 
     "./js/app.js",
-    "./js/config.js",
     "./js/firebase.js",
     "./js/firebase-raspadinha.js",
+    "./js/modal-premio.js",
     "./js/participantes.js",
     "./js/premios.js",
-    "./js/modal-premio.js",
     "./js/raspadinha.js",
     "./js/sorteio.js",
     "./js/effects.js",
@@ -33,33 +31,31 @@ const ARQUIVOS = [
     "./img/logo.png",
     "./img/ferro.png",
     "./img/liquidificador.png",
-    "./img/trevo.png",
-    "./img/perdeu.png",
-
-    "./sounds/click.mp3",
-    "./sounds/raspar.mp3",
-    "./sounds/vitoria.mp3",
-    "./sounds/perdeu.mp3",
 
     "./icons/favicon.png",
     "./icons/icon-192.png",
-    "./icons/icon-512.png"
+    "./icons/icon-512.png",
+
+    "./sounds/abertura.mp3",
+    "./sounds/alarme.mp3",
+    "./sounds/aplausos.mp3",
+    "./sounds/notificacoes.mp3",
+    "./sounds/raspar.mp3",
+    "./sounds/retorna.mp3"
 
 ];
 
-/* =====================================================
+/* ==========================================================
    INSTALAÇÃO
-===================================================== */
+========================================================== */
 
-self.addEventListener("install", event => {
-
-    console.log("Service Worker instalado.");
+self.addEventListener("install", (event) => {
 
     event.waitUntil(
 
         caches.open(CACHE_NAME)
 
-            .then(cache => cache.addAll(ARQUIVOS))
+            .then((cache) => cache.addAll(FILES_TO_CACHE))
 
     );
 
@@ -67,35 +63,31 @@ self.addEventListener("install", event => {
 
 });
 
-/* =====================================================
+/* ==========================================================
    ATIVAÇÃO
-===================================================== */
+========================================================== */
 
-self.addEventListener("activate", event => {
-
-    console.log("Service Worker ativado.");
+self.addEventListener("activate", (event) => {
 
     event.waitUntil(
 
-        caches.keys()
+        caches.keys().then((keys) => {
 
-            .then(keys =>
+            return Promise.all(
 
-                Promise.all(
+                keys.map((key) => {
 
-                    keys.map(key => {
+                    if (key !== CACHE_NAME) {
 
-                        if (key !== CACHE_NAME) {
+                        return caches.delete(key);
 
-                            return caches.delete(key);
+                    }
 
-                        }
+                })
 
-                    })
+            );
 
-                )
-
-            )
+        })
 
     );
 
@@ -103,41 +95,45 @@ self.addEventListener("activate", event => {
 
 });
 
-/* =====================================================
+/* ==========================================================
    FETCH
-===================================================== */
+========================================================== */
 
-self.addEventListener("fetch", event => {
+self.addEventListener("fetch", (event) => {
 
-    if (event.request.method !== "GET") return;
+    if (event.request.method !== "GET") {
+
+        return;
+
+    }
 
     event.respondWith(
 
         caches.match(event.request)
 
-            .then(cache => {
+            .then((response) => {
 
-                if (cache) {
+                if (response) {
 
-                    return cache;
+                    return response;
 
                 }
 
                 return fetch(event.request)
 
-                    .then(response => {
+                    .then((networkResponse) => {
 
-                        const copia = response.clone();
+                        const copia = networkResponse.clone();
 
                         caches.open(CACHE_NAME)
 
-                            .then(cache => {
+                            .then((cache) => {
 
                                 cache.put(event.request, copia);
 
                             });
 
-                        return response;
+                        return networkResponse;
 
                     });
 
@@ -150,19 +146,5 @@ self.addEventListener("fetch", event => {
             })
 
     );
-
-});
-
-/* =====================================================
-   MENSAGENS
-===================================================== */
-
-self.addEventListener("message", event => {
-
-    if (event.data === "SKIP_WAITING") {
-
-        self.skipWaiting();
-
-    }
 
 });
