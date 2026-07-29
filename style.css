@@ -1,401 +1,187 @@
-/* ==========================
+/* ======================================================
+   RASPADINHA PREMIADA
+   style.css
+====================================================== */
+
+/* ======================================================
    RESET
-========================== */
+====================================================== */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
 }
 
 body{
 
-    background:#101010;
-    overflow:hidden;
-    height:100vh;
+    font-family:Arial,Helvetica,sans-serif;
+
+    background:#111;
+
+    color:#fff;
+
+    overflow-x:hidden;
+
+    min-height:100vh;
+
+    position:relative;
 
 }
 
-/* ==========================
-   FUNDO
-========================== */
+/* ======================================================
+   BACKGROUND
+====================================================== */
 
 #background{
 
     position:fixed;
+
     inset:0;
+
     overflow:hidden;
+
     background:
-    radial-gradient(circle,#2f2f2f,#111);
+        radial-gradient(circle at top,#333,#111);
+
+    z-index:-10;
 
 }
 
-/* ==========================
+/* ======================================================
    PRODUTOS
-========================== */
+====================================================== */
 
 .produto{
 
     position:absolute;
+
     width:180px;
+
     height:180px;
 
-    background-size:contain;
     background-repeat:no-repeat;
+
     background-position:center;
 
+    background-size:contain;
+
     opacity:.18;
+
+    pointer-events:none;
 
 }
 
 .ferro{
 
-    background-image:url(img/ferro.png);
+    background-image:url("../img/ferro.png");
 
-    top:15%;
+    top:8%;
 
     left:-220px;
 
-    animation:ferro 26s linear infinite;
+    animation:ferroPasseando 28s linear infinite;
 
 }
 
 .liquidificador{
 
-    background-image:url(img/liquidificador.png);
+    background-image:url("../img/liquidificador.png");
 
-    bottom:12%;
+    bottom:8%;
 
     right:-220px;
 
-    animation:liquidificador 30s linear infinite;
+    animation:liquidificadorPasseando 32s linear infinite;
 
 }
 
-@keyframes ferro{
+@keyframes ferroPasseando{
 
-0%{
+    from{
 
-left:-220px;
-transform:rotate(-10deg);
+        left:-220px;
 
-}
+        transform:rotate(-10deg);
 
-100%{
+    }
 
-left:110%;
-transform:rotate(10deg);
+    to{
 
-}
+        left:110%;
 
-}
+        transform:rotate(10deg);
 
-@keyframes liquidificador{
-
-0%{
-
-right:-220px;
-transform:rotate(8deg);
+    }
 
 }
 
-100%{
+@keyframes liquidificadorPasseando{
 
-right:110%;
-transform:rotate(-8deg);
+    from{
 
-}
+        right:-220px;
 
-}
+        transform:rotate(8deg);
 
-/* ==========================
-   TREVOS
-========================== */
+    }
 
-#trevos{
+    to{
 
-    position:absolute;
-    inset:0;
-    overflow:hidden;
+        right:110%;
 
-}
+        transform:rotate(-8deg);
 
-.trevo{
-
-    position:absolute;
-
-    width:28px;
-    height:28px;
-
-    background-image:url(img/trevo.png);
-    background-size:contain;
-    background-repeat:no-repeat;
-
-    animation:cair linear forwards;
+    }
 
 }
 
-@keyframes cair{
+/* ======================================================
+   HEADER
+====================================================== */
 
-0%{
+header{
 
-transform:
-translateY(-50px)
-rotate(0deg);
+    padding:25px 15px;
 
-opacity:0;
-
-}
-
-10%{
-
-opacity:1;
+    text-align:center;
 
 }
 
-100%{
+.logo{
 
-transform:
-translateY(120vh)
-rotate(720deg);
+    width:110px;
 
-opacity:0;
+    margin-bottom:15px;
 
 }
 
-}
+header h1{
 
-/* ==========================
-   BOTÃO
-========================== */
+    font-size:2rem;
 
-#btnRaspar{
+    color:#FFD700;
 
-position:fixed;
+    text-shadow:
 
-bottom:25px;
+        0 0 10px #FFD700,
 
-left:50%;
-
-transform:translateX(-50%);
-
-padding:18px 35px;
-
-border:none;
-
-border-radius:50px;
-
-font-size:20px;
-
-font-weight:bold;
-
-cursor:pointer;
-
-background:#18c63f;
-
-color:white;
-
-box-shadow:
-
-0 0 15px #18c63f,
-
-0 0 40px #18c63f;
-
-transition:.30s;
-
-z-index:999;
+        0 0 25px #FFD700;
 
 }
 
-#btnRaspar:hover{
+header p{
 
-transform:translateX(-50%) scale(1.06);
+    margin-top:10px;
 
-}
+    color:#ddd;
 
-/* ==========================
-   JANELA
-========================== */
-
-#janelaRaspadinha{
-
-position:fixed;
-
-inset:0;
-
-background:rgba(0,0,0,.85);
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-z-index:9999;
-
-}
-
-.oculto{
-
-display:none !important;
-
-}
-
-/* ==========================
-   CARTÃO
-========================== */
-
-.cartao{
-
-width:92%;
-
-max-width:420px;
-
-background:white;
-
-border-radius:18px;
-
-padding:20px;
-
-text-align:center;
-
-box-shadow:0 0 30px black;
-
-}
-
-.cartao h2{
-
-margin-bottom:10px;
-
-color:#009933;
-
-}
-
-.cartao p{
-
-margin-bottom:20px;
-
-}
-
-/* ==========================
-   ÁREA DA RASPADINHA
-========================== */
-
-#raspinha{
-
-position:relative;
-
-width:320px;
-
-height:320px;
-
-margin:auto;
-
-background:#fff;
-
-border-radius:15px;
-
-overflow:hidden;
-
-border:5px solid gold;
-
-}
-
-#premio{
-
-position:absolute;
-
-inset:0;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-}
-
-#premio img{
-
-width:180px;
-
-max-width:80%;
-
-margin-bottom:10px;
-
-}
-
-#textoPremio{
-
-font-size:24px;
-
-color:#d40000;
-
-}
-
-/* Canvas */
-
-canvas{
-
-position:absolute;
-
-inset:0;
-
-width:100%;
-
-height:100%;
-
-cursor:pointer;
-
-}
-
-/* ==========================
-   FECHAR
-========================== */
-
-#fechar{
-
-margin-top:20px;
-
-padding:12px 30px;
-
-border:none;
-
-border-radius:30px;
-
-background:#444;
-
-color:white;
-
-font-size:18px;
-
-cursor:pointer;
-
-}
-
-#fechar:hover{
-
-background:#222;
-
-}
-
-/* ==========================
-   CONFETES
-========================== */
-
-#confetes{
-
-position:fixed;
-
-inset:0;
-
-pointer-events:none;
-
-overflow:hidden;
-
-z-index:99999;
+    font-size:1rem;
 
 }
