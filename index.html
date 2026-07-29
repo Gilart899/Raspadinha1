@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#0b7d2b">
+
+<title>🍀 Raspadinha Premiada</title>
+
+<link rel="manifest" href="manifest.json">
+
+<link rel="icon" href="icons/favicon.png">
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet" href="css/animations.css">
+
+</head>
+
+  <!-- ===========================================
+     MODAL PARTICIPANTE
+=========================================== -->
+
+<div id="modalParticipante" class="hidden">
+
+    <div class="janela formulario">
+
+        <h2>🎟 Participar</h2>
+
+        <div class="campo">
+
+            <label>Nome</label>
+
+            <input
+                id="nome"
+                type="text"
+                autocomplete="name">
+
+        </div>
+
+        <div class="campo">
+
+            <label>Telefone</label>
+
+            <input
+                id="telefone"
+                type="tel"
+                autocomplete="tel">
+
+        </div>
+
+        <div class="campo">
+
+            <label>CPF</label>
+
+            <input
+                id="cpf"
+                type="text"
+                maxlength="14">
+
+        </div>
+
+        <div class="campo">
+
+            <label>Número da Rifa</label>
+
+            <input
+                id="numero"
+                type="number">
+
+        </div>
+
+        <div class="acoes">
+
+            <button id="cancelarCadastro">
+
+                Cancelar
+
+            </button>
+
+            <button id="confirmarCadastro">
+
+                Confirmar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<body>
+
+<!-- =========================
+     BACKGROUND
+========================= -->
+
+<div id="background">
+
+    <div id="trevos"></div>
+
+    <div id="particulas"></div>
+
+    <div class="produto ferro"></div>
+
+    <div class="produto liquidificador"></div>
+
+</div>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <img
+        src="img/logo.png"
+        class="logo"
+        alt="Logo">
+
+    <h1>🍀 RASPADINHA PREMIADA</h1>
+
+    <p>Concorra a um dos prêmios!</p>
+
+</header>
+
+<!-- =========================
+     PRÊMIOS
+========================= -->
+
+<section class="premios">
+
+    <article class="card">
+
+        <img
+            src="img/ferro.png"
+            alt="Ferro">
+
+        <h2>Ferro Elétrico</h2>
+
+    </article>
+
+    <div class="ou">OU</div>
+
+    <article class="card">
+
+        <img
+            src="img/liquidificador.png"
+            alt="Liquidificador">
+
+        <h2>Liquidificador</h2>
+
+    </article>
+
+</section>
+
+<!-- =========================
+     BOTÃO
+========================= -->
+
+<section class="acao">
+
+    <button id="btnParticipar">
+
+        🎁 RASPE E CONCORRA
+
+    </button>
+
+</section>
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div
+    id="modal"
+    class="hidden">
+
+    <div class="janela">
+
+        <h2>🍀 Boa sorte!</h2>
+
+        <p>Raspe toda a área abaixo.</p>
+
+        <div id="raspadinha">
+
+            <canvas id="canvas"></canvas>
+
+            <div id="premio">
+
+                <img
+                    id="imagemPremio"
+                    alt="Prêmio">
+
+                <h1 id="textoPremio"></h1>
+
+            </div>
+
+        </div>
+
+        <div class="botoes">
+
+            <button id="compartilhar">
+
+                Compartilhar
+
+            </button>
+
+            <button id="fechar">
+
+                Fechar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     CONFETES
+========================= -->
+
+<div id="confetes"></div>
+
+<!-- =========================
+     LOADING
+========================= -->
+
+<div id="loading">
+
+    <div class="spinner"></div>
+
+    <p>Carregando...</p>
+
+</div>
+
+<!-- =========================
+     APP
+========================= -->
+
+<script type="module" src="js/app.js"></script>
+
+</body>
+
+</html>
