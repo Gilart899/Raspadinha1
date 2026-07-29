@@ -1,0 +1,414 @@
+/* ==========================================================
+   RASPADINHA PREMIADA
+   ANIMAÇÕES
+========================================================== */
+
+/* ==========================================================
+   FADE
+========================================================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes fadeOut{
+
+    from{
+
+        opacity:1;
+
+    }
+
+    to{
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================================
+   SCALE
+========================================================== */
+
+@keyframes scaleIn{
+
+    from{
+
+        transform:scale(.8);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes scaleOut{
+
+    from{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+    to{
+
+        transform:scale(.8);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================================
+   PULSE
+========================================================== */
+
+@keyframes pulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.08);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================================
+   BOTÃO
+========================================================== */
+
+@keyframes brilhoBotao{
+
+    0%{
+
+        box-shadow:
+
+        0 0 10px #00d84f,
+
+        0 0 20px #00d84f;
+
+    }
+
+    50%{
+
+        box-shadow:
+
+        0 0 25px #00ff66,
+
+        0 0 60px #00ff66;
+
+    }
+
+    100%{
+
+        box-shadow:
+
+        0 0 10px #00d84f,
+
+        0 0 20px #00d84f;
+
+    }
+
+}
+
+/* ==========================================================
+   TREVOS
+========================================================== */
+
+@keyframes cairTrevo{
+
+    0%{
+
+        transform:
+
+        translateY(-60px)
+
+        rotate(0deg);
+
+        opacity:0;
+
+    }
+
+    15%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:
+
+        translateY(120vh)
+
+        rotate(720deg);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================================
+   PRODUTOS
+========================================================== */
+
+@keyframes passearEsquerda{
+
+    from{
+
+        left:-240px;
+
+        transform:rotate(-10deg);
+
+    }
+
+    to{
+
+        left:110%;
+
+        transform:rotate(10deg);
+
+    }
+
+}
+
+@keyframes passearDireita{
+
+    from{
+
+        right:-240px;
+
+        transform:rotate(8deg);
+
+    }
+
+    to{
+
+        right:110%;
+
+        transform:rotate(-8deg);
+
+    }
+
+}
+
+/* ==========================================================
+   CONFETES
+========================================================== */
+
+@keyframes confete{
+
+    from{
+
+        transform:
+
+        translateY(-80px)
+
+        rotate(0deg);
+
+        opacity:1;
+
+    }
+
+    to{
+
+        transform:
+
+        translateY(120vh)
+
+        rotate(1080deg);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================================
+   PARTÍCULAS
+========================================================== */
+
+@keyframes particula{
+
+    from{
+
+        transform:translateY(0);
+
+        opacity:.6;
+
+    }
+
+    to{
+
+        transform:translateY(-120vh);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================================
+   SPINNER
+========================================================== */
+
+@keyframes spinner{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================================
+   MODAL
+========================================================== */
+
+@keyframes modalAbrir{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+        scale(.8)
+
+        translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+        scale(1)
+
+        translateY(0);
+
+    }
+
+}
+
+@keyframes modalFechar{
+
+    from{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:scale(.8);
+
+    }
+
+}
+
+/* ==========================================================
+   PRÊMIO
+========================================================== */
+
+@keyframes premio{
+
+    0%{
+
+        transform:scale(.5);
+
+        opacity:0;
+
+    }
+
+    60%{
+
+        transform:scale(1.15);
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================================
+   BRILHO
+========================================================== */
+
+@keyframes brilho{
+
+    0%{
+
+        filter:brightness(1);
+
+    }
+
+    50%{
+
+        filter:brightness(1.4);
+
+    }
+
+    100%{
+
+        filter:brightness(1);
+
+    }
+
+}
