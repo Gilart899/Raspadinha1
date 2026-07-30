@@ -1,1 +1,916 @@
+/* ======================================================
+   RASPADINHA PREMIADA
+   style.css
+====================================================== */
+
+/* ======================================================
+   RESET
+====================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    background:#111;
+
+    color:#fff;
+
+    overflow-x:hidden;
+
+    min-height:100vh;
+
+    position:relative;
+
+}
+
+/* ======================================================
+   BACKGROUND
+====================================================== */
+
+#background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(circle at top,#333,#111);
+
+    z-index:-10;
+
+}
+
+/* ======================================================
+   PRODUTOS
+====================================================== */
+
+.produto{
+
+    position:absolute;
+
+    width:180px;
+
+    height:180px;
+
+    background-repeat:no-repeat;
+
+    background-position:center;
+
+    background-size:contain;
+
+    opacity:.18;
+
+    pointer-events:none;
+
+}
+
+.ferro{
+
+    background-image:url("../img/ferro.png");
+
+    top:8%;
+
+    left:-220px;
+
+    animation:ferroPasseando 28s linear infinite;
+
+}
+
+.liquidificador{
+
+    background-image:url("../img/liquidificador.png");
+
+    bottom:8%;
+
+    right:-220px;
+
+    animation:liquidificadorPasseando 32s linear infinite;
+
+}
+
+@keyframes ferroPasseando{
+
+    from{
+
+        left:-220px;
+
+        transform:rotate(-10deg);
+
+    }
+
+    to{
+
+        left:110%;
+
+        transform:rotate(10deg);
+
+    }
+
+}
+
+@keyframes liquidificadorPasseando{
+
+    from{
+
+        right:-220px;
+
+        transform:rotate(8deg);
+
+    }
+
+    to{
+
+        right:110%;
+
+        transform:rotate(-8deg);
+
+    }
+
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+header{
+
+    padding:25px 15px;
+
+    text-align:center;
+
+}
+
+.logo{
+
+    width:110px;
+
+    margin-bottom:15px;
+
+}
+
+header h1{
+
+    font-size:2rem;
+
+    color:#FFD700;
+
+    text-shadow:
+
+        0 0 10px #FFD700,
+
+        0 0 25px #FFD700;
+
+}
+
+header p{
+
+    margin-top:10px;
+
+   /* ======================================================
+   PRÊMIOS
+====================================================== */
+
+.premios{
+
+    width:95%;
+    max-width:900px;
+
+    margin:25px auto;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:30px;
+
+    flex-wrap:wrap;
+
+}
+
+.card{
+
+    width:220px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(8px);
+
+    border:2px solid rgba(255,255,255,.15);
+
+    border-radius:20px;
+
+    padding:20px;
+
+    text-align:center;
+
+    transition:.35s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 0 30px rgba(255,215,0,.35);
+
+}
+
+.card img{
+
+    width:150px;
+
+    max-width:100%;
+
+}
+
+.card h2{
+
+    margin-top:15px;
+
+    color:#fff;
+
+    font-size:1.2rem;
+
+}
+
+.ou{
+
+    font-size:26px;
+
+    font-weight:bold;
+
+    color:#FFD700;
+
+}
+
+/* ======================================================
+   BOTÕES
+====================================================== */
+
+.acao{
+
+    text-align:center;
+
+    margin-top:25px;
+
+}
+
+button{
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+#btnParticipar{
+
+    border:none;
+
+    border-radius:50px;
+
+    padding:18px 45px;
+
+    background:#0BBE3D;
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    box-shadow:
+
+        0 0 20px #0BBE3D,
+
+        0 0 50px rgba(11,190,61,.4);
+
+}
+
+#btnParticipar:hover{
+
+    transform:scale(1.05);
+
+}
+
+#btnParticipar:active{
+
+    transform:scale(.97);
+
+}
+
+/* ======================================================
+   MODAIS
+====================================================== */
+
+.hidden{
+
+    display:none !important;
+
+}
+
+#modal,
+
+#modalParticipante{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.janela{
+
+    width:92%;
+
+    max-width:430px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    color:#222;
+
+    text-align:center;
+
+    animation:modalEntrada .35s;
+
+}
+
+@keyframes modalEntrada{
+
+    from{
+
+        transform:scale(.85);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+/* ======================================================
+   FORMULÁRIO
+====================================================== */
+
+.campo{
+
+    margin-bottom:15px;
+
+    text-align:left;
+
+}
+
+.campo label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    font-weight:bold;
+
+}
+
+.campo input{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #CCC;
+
+    outline:none;
+
+}
+
+.campo input:focus{
+
+    border-color:#0BBE3D;
+
+    box-shadow:0 0 8px rgba(11,190,61,.25);
+
+}
+
+.acoes{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin-top:20px;
+
+}
+
+.acoes button{
+
+    flex:1;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+}
+
+#confirmarCadastro{
+
+    background:#0BBE3D;
+
+    color:white;
+
+}
+
+#cancelarCadastro{
+
+    background:#DDD;
+
+}
+
+/* ======================================================
+   RASPADINHA
+====================================================== */
+
+#raspadinha{
+
+    position:relative;
+
+    width:300px;
+
+    height:300px;
+
+    margin:20px auto;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:5px solid gold;
+
+    background:white;
+
+}
+
+#premio{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+#premio img{
+
+    width:170px;
+
+    max-width:85%;
+
+}
+
+#textoPremio{
+
+    margin-top:12px;
+
+    font-size:24px;
+
+    color:#C70000;
+
+    font-weight:bold;
+
+}
+
+canvas{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    touch-action:none;
+
+}
+
+/* ======================================================
+   BOTÕES DO MODAL
+====================================================== */
+
+.botoes{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:20px;
+
+}
+
+.botoes button{
+
+    flex:1;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#0BBE3D;
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+#fechar{
+
+    background:#555;
+
+}
+    color:#ddd;
+
+    font-size:1rem;
+
+}
+
+/* ======================================================
+   TREVOS
+====================================================== */
+
+#trevos{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:1;
+
+}
+
+.trevo{
+
+    position:absolute;
+
+    width:28px;
+
+    height:28px;
+
+    background:url("../img/trevo.png") center/contain no-repeat;
+
+    animation:cairTrevo linear forwards;
+
+}
+
+@keyframes cairTrevo{
+
+    0%{
+
+        transform:
+        translateY(-60px)
+        rotate(0deg);
+
+        opacity:0;
+
+    }
+
+    10%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:
+        translateY(110vh)
+        rotate(720deg);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ======================================================
+   PARTÍCULAS
+====================================================== */
+
+#particulas{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:2;
+
+}
+
+.particula{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:white;
+
+    opacity:.35;
+
+    animation:subirParticula linear forwards;
+
+}
+
+@keyframes subirParticula{
+
+    from{
+
+        transform:translateY(0);
+
+        opacity:0;
+
+    }
+
+    20%{
+
+        opacity:.5;
+
+    }
+
+    to{
+
+        transform:translateY(-120vh);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ======================================================
+   CONFETES
+====================================================== */
+
+#confetes{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:10000;
+
+}
+
+.confete{
+
+    position:absolute;
+
+    width:12px;
+
+    height:18px;
+
+    animation:confeteCair 4s linear forwards;
+
+}
+
+@keyframes confeteCair{
+
+    from{
+
+        transform:
+        translateY(-80px)
+        rotate(0deg);
+
+        opacity:1;
+
+    }
+
+    to{
+
+        transform:
+        translateY(110vh)
+        rotate(1080deg);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ======================================================
+   LOADING
+====================================================== */
+
+#loading{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:rgba(0,0,0,.88);
+
+    z-index:99999;
+
+}
+
+.spinner{
+
+    width:70px;
+
+    height:70px;
+
+    border:8px solid rgba(255,255,255,.2);
+
+    border-top:8px solid #00d94f;
+
+    border-radius:50%;
+
+    animation:girar 1s linear infinite;
+
+}
+
+@keyframes girar{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+#loading p{
+
+    margin-top:20px;
+
+    font-size:18px;
+
+    color:white;
+
+}
+
+/* ======================================================
+   RESPONSIVO
+====================================================== */
+
+@media (max-width:768px){
+
+    header h1{
+
+        font-size:1.6rem;
+
+    }
+
+    .logo{
+
+        width:90px;
+
+    }
+
+    .premios{
+
+        gap:15px;
+
+    }
+
+    .card{
+
+        width:180px;
+
+    }
+
+    .card img{
+
+        width:120px;
+
+    }
+
+    #raspadinha{
+
+        width:270px;
+
+        height:270px;
+
+    }
+
+    #btnParticipar{
+
+        width:90%;
+
+        font-size:18px;
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    .card{
+
+        width:160px;
+
+    }
+
+    .card img{
+
+        width:100px;
+
+    }
+
+    .janela{
+
+        padding:18px;
+
+    }
+
+    #raspadinha{
+
+        width:240px;
+
+        height:240px;
+
+    }
+
+    #textoPremio{
+
+        font-size:20px;
+
+    }
+
+}
+
+/* ======================================================
+   FIM DO ARQUIVO
+====================================================== */
 
