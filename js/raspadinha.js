@@ -1,51 +1,122 @@
-
 /* ==========================================================
    RASPADINHA DA AMIZADE
    raspadinha.js
+   Versão compatível Firebase
 ========================================================== */
 
-import { realizarSorteio } from "./firebase-raspadinha.js";
-import { abrirModalPremio } from "./modal-premio.js";
+
+/* ==========================================================
+   FIREBASE
+========================================================== */
 
 import {
+
+    processarRaspadinha
+
+} from "./firebase-raspadinha.js";
+
+
+
+/* ==========================================================
+   MODAL
+========================================================== */
+
+import {
+
+    abrirModalPremio
+
+} from "./modal-premio.js";
+
+
+
+/* ==========================================================
+   SONS
+========================================================== */
+
+import {
+
     tocarSom,
     pararSom,
     somAbertura,
     somVitoria,
     somDerrota
+
 } from "./sounds.js";
 
+
+
+/* ==========================================================
+   EFEITOS
+========================================================== */
+
 import {
+
     efeitoVitoria,
     efeitoDerrota
+
 } from "./effects.js";
+
+
 
 /* ==========================================================
    ELEMENTOS
 ========================================================== */
 
-const btnParticipar = document.getElementById("btnParticipar");
+const btnParticipar =
 
-const modal = document.getElementById("modal");
+    document.getElementById(
+        "btnParticipar"
+    );
 
-const btnFechar = document.getElementById("fechar");
 
-const canvas = document.getElementById("canvas");
+const modal =
 
-const ctx = canvas.getContext("2d", {
+    document.getElementById(
+        "modal"
+    );
 
-    willReadFrequently: true
 
-});
+const btnFechar =
+
+    document.getElementById(
+        "fechar"
+    );
+
+
+const canvas =
+
+    document.getElementById(
+        "canvas"
+    );
+
+
+const ctx =
+
+    canvas.getContext(
+        "2d",
+        {
+            willReadFrequently:true
+        }
+    );
+
 
 const imagemPremio =
-    document.getElementById("imagemPremio");
+
+    document.getElementById(
+        "imagemPremio"
+    );
+
 
 const textoPremio =
-    document.getElementById("textoPremio");
+
+    document.getElementById(
+        "textoPremio"
+    );
+
+
 
 /* ==========================================================
-   CONFIGURAÇÃO
+   CONFIGURAÇÃO CANVAS
 ========================================================== */
 
 const LARGURA = 320;
@@ -55,6 +126,8 @@ const ALTURA = 320;
 const RAIO = 22;
 
 const PORCENTAGEM_REVELAR = 60;
+
+
 
 /* ==========================================================
    ESTADO
@@ -66,53 +139,289 @@ let revelado = false;
 
 let resultado = null;
 
-/* ==========================================================
-   INICIAR
-========================================================== */
+let participanteAtual = null;
 
-btnParticipar.addEventListener(
+let processando = false;
 
-    "click",
 
-    abrirRaspadinha
-
-);
-
-btnFechar.addEventListener(
-
-    "click",
-
-    fecharRaspadinha
-
-);
 
 /* ==========================================================
-   ABRIR
+   EVENTOS INICIAIS
 ========================================================== */
 
-async function abrirRaspadinha() {
+if(btnParticipar){
 
-    modal.classList.remove("hidden");
+    btnParticipar.addEventListener(
 
-    somAbertura();
+        "click",
 
-    prepararCanvas();
+        abrirRaspadinha
 
-    resultado = await realizarSorteio();
+    );
+
+}
+
+
+if(btnFechar){
+
+    btnFechar.addEventListener(
+
+        "click",
+
+        fecharRaspadinha
+
+    );
 
 }
 
 /* ==========================================================
-   FECHAR
+   ABRIR RASPADINHA
 ========================================================== */
 
-function fecharRaspadinha() {
+async function abrirRaspadinha(){
 
-    pararSom("raspar");
 
-    modal.classList.add("hidden");
+    if(processando){
+
+        return;
+
+    }
+
+
+    processando = true;
+
+
+
+    try{
+
+
+        /*
+            Aqui vamos buscar os dados
+            do participante.
+
+            Por enquanto estamos usando
+            o formulário da página.
+
+            O HTML precisa ter:
+
+            input id="cpf"
+
+        */
+
+
+        const campoCPF =
+
+            document.getElementById(
+                "cpf"
+            );
+
+
+
+        if(!campoCPF){
+
+
+            console.error(
+
+                "Campo CPF não encontrado."
+
+            );
+
+
+            return;
+
+
+        }
+
+
+
+        const cpf =
+
+            campoCPF.value
+
+            .replace(/\D/g,"");
+
+
+
+        if(!cpf){
+
+
+            alert(
+
+                "Digite seu CPF."
+
+            );
+
+
+            return;
+
+
+        }
+
+
+
+        const campoNome =
+
+            document.getElementById(
+                "nome"
+            );
+
+
+
+        const campoTelefone =
+
+            document.getElementById(
+                "telefone"
+            );
+
+
+
+        participanteAtual = {
+
+
+            cpf,
+
+
+            nome:
+
+                campoNome ?
+
+                campoNome.value :
+
+                "",
+
+
+
+            telefone:
+
+                campoTelefone ?
+
+                campoTelefone.value :
+
+                ""
+
+
+
+        };
+
+
+
+
+        /*
+            Executa Firebase
+
+            Aqui:
+
+            - verifica se já raspou
+            - sorteia
+            - salva tentativa
+            - salva vencedor
+
+        */
+
+
+        resultado =
+
+            await processarRaspadinha(
+
+                participanteAtual
+
+            );
+
+
+
+        if(!resultado.sucesso){
+
+
+            alert(
+
+                resultado.mensagem
+
+            );
+
+
+            return;
+
+
+        }
+
+
+
+        modal.classList.remove(
+            "hidden"
+        );
+
+
+
+        somAbertura();
+
+
+
+        prepararCanvas();
+
+
+
+    }catch(erro){
+
+
+        console.error(
+
+            "Erro ao iniciar raspadinha:",
+
+            erro
+
+        );
+
+
+        alert(
+
+            "Erro ao iniciar raspadinha."
+
+        );
+
+
+    }finally{
+
+
+        processando = false;
+
+
+    }
+
+
+
+}
+
+
+
+/* ==========================================================
+   FECHAR RASPADINHA
+========================================================== */
+
+function fecharRaspadinha(){
+
+
+
+    pararSom(
+        "raspar"
+    );
+
+
+
+    if(modal){
+
+
+        modal.classList.add(
+            "hidden"
+        );
+
+
+    }
+
+
 
     limparCanvas();
+
+
 
 }
 
@@ -120,11 +429,14 @@ function fecharRaspadinha() {
    PREPARAR CANVAS
 ========================================================== */
 
-function prepararCanvas() {
+function prepararCanvas(){
+
 
     canvas.width = LARGURA;
 
     canvas.height = ALTURA;
+
+
 
     ctx.clearRect(
 
@@ -138,9 +450,21 @@ function prepararCanvas() {
 
     );
 
-    ctx.globalCompositeOperation = "source-over";
+
+
+    ctx.globalCompositeOperation =
+
+        "source-over";
+
+
+
+    /*
+        Fundo da camada raspável
+    */
+
 
     ctx.fillStyle = "#A8A8A8";
+
 
     ctx.fillRect(
 
@@ -154,11 +478,22 @@ function prepararCanvas() {
 
     );
 
+
+
     ctx.fillStyle = "#555";
 
-    ctx.font = "bold 26px Arial";
 
-    ctx.textAlign = "center";
+    ctx.font =
+
+        "bold 26px Arial";
+
+
+
+    ctx.textAlign =
+
+        "center";
+
+
 
     ctx.fillText(
 
@@ -170,117 +505,294 @@ function prepararCanvas() {
 
     );
 
-    revelarPremio();
+
 
     configurarEventos();
 
+
 }
+
+
 
 /* ==========================================================
-   EVENTOS
+   CONFIGURAR EVENTOS
 ========================================================== */
 
-function configurarEventos() {
+function configurarEventos(){
 
-    canvas.onmousedown = iniciarMouse;
-    canvas.onmousemove = moverMouse;
-    window.onmouseup = pararRaspagem;
 
-    canvas.ontouchstart = iniciarTouch;
-    canvas.ontouchmove = moverTouch;
-    canvas.ontouchend = pararRaspagem;
+
+    canvas.onmousedown =
+
+        iniciarMouse;
+
+
+
+    canvas.onmousemove =
+
+        moverMouse;
+
+
+
+    window.onmouseup =
+
+        pararRaspagem;
+
+
+
+
+    canvas.ontouchstart =
+
+        iniciarTouch;
+
+
+
+    canvas.ontouchmove =
+
+        moverTouch;
+
+
+
+    canvas.ontouchend =
+
+        pararRaspagem;
+
+
 
 }
+
+
 
 /* ==========================================================
    MOUSE
 ========================================================== */
 
-function iniciarMouse(e) {
+function iniciarMouse(e){
+
+
+    if(revelado){
+
+        return;
+
+    }
+
+
 
     raspando = true;
 
-    tocarSom("raspar");
 
-    raspar(e.offsetX, e.offsetY);
+
+    tocarSom(
+        "raspar"
+    );
+
+
+
+    raspar(
+
+        e.offsetX,
+
+        e.offsetY
+
+    );
+
+
 
 }
 
-function moverMouse(e) {
 
-    if (!raspando) return;
 
-    raspar(e.offsetX, e.offsetY);
+function moverMouse(e){
+
+
+
+    if(!raspando){
+
+        return;
+
+    }
+
+
+
+    raspar(
+
+        e.offsetX,
+
+        e.offsetY
+
+    );
+
 
 }
+
+
 
 /* ==========================================================
    TOUCH
 ========================================================== */
 
-function iniciarTouch(e) {
+function iniciarTouch(e){
+
 
     e.preventDefault();
+
+
+
+    if(revelado){
+
+        return;
+
+    }
+
+
 
     raspando = true;
 
-    tocarSom("raspar");
 
-    const p = obterPosicaoTouch(e);
 
-    raspar(p.x, p.y);
+    tocarSom(
+        "raspar"
+    );
+
+
+
+    const posicao =
+
+        obterPosicaoTouch(e);
+
+
+
+    raspar(
+
+        posicao.x,
+
+        posicao.y
+
+    );
+
 
 }
 
-function moverTouch(e) {
+
+
+function moverTouch(e){
+
 
     e.preventDefault();
 
-    if (!raspando) return;
 
-    const p = obterPosicaoTouch(e);
 
-    raspar(p.x, p.y);
+    if(!raspando){
+
+        return;
+
+    }
+
+
+
+    const posicao =
+
+        obterPosicaoTouch(e);
+
+
+
+    raspar(
+
+        posicao.x,
+
+        posicao.y
+
+    );
+
 
 }
 
-function obterPosicaoTouch(e) {
 
-    const rect = canvas.getBoundingClientRect();
+
+function obterPosicaoTouch(e){
+
+
+
+    const rect =
+
+        canvas.getBoundingClientRect();
+
+
 
     return {
 
-        x: e.touches[0].clientX - rect.left,
 
-        y: e.touches[0].clientY - rect.top
+        x:
+
+        e.touches[0].clientX
+
+        - rect.left,
+
+
+
+        y:
+
+        e.touches[0].clientY
+
+        - rect.top
+
+
 
     };
 
+
 }
 
+
+
 /* ==========================================================
-   PARAR
+   PARAR RASPAGEM
 ========================================================== */
 
-function pararRaspagem() {
+function pararRaspagem(){
+
+
 
     raspando = false;
 
-    pararSom("raspar");
+
+
+    pararSom(
+
+        "raspar"
+
+    );
+
 
 }
 
+
+
 /* ==========================================================
-   RASPAR
+   EXECUTAR RASPAGEM
 ========================================================== */
 
-function raspar(x, y) {
+function raspar(x,y){
 
-    if (revelado) return;
 
-    ctx.globalCompositeOperation = "destination-out";
+
+    if(revelado){
+
+        return;
+
+    }
+
+
+
+    ctx.globalCompositeOperation =
+
+        "destination-out";
+
+
 
     ctx.beginPath();
+
+
 
     ctx.arc(
 
@@ -296,157 +808,287 @@ function raspar(x, y) {
 
     );
 
+
+
     ctx.fill();
+
+
 
     verificarPorcentagem();
 
+
+
 }
 
+
+
 /* ==========================================================
-   VERIFICAR PORCENTAGEM
+   VERIFICAR ÁREA REVELADA
 ========================================================== */
 
-function verificarPorcentagem() {
+function verificarPorcentagem(){
 
-    const pixels = ctx.getImageData(
 
-        0,
 
-        0,
+    const pixels =
 
-        LARGURA,
+        ctx.getImageData(
 
-        ALTURA
+            0,
 
-    ).data;
+            0,
+
+            LARGURA,
+
+            ALTURA
+
+        ).data;
+
+
 
     let transparentes = 0;
 
-    for (let i = 3; i < pixels.length; i += 4) {
 
-        if (pixels[i] === 0) {
+
+    for(
+
+        let i = 3;
+
+        i < pixels.length;
+
+        i += 4
+
+    ){
+
+
+        if(pixels[i] === 0){
+
 
             transparentes++;
 
+
         }
 
+
     }
+
+
 
     const porcentagem =
 
-        (transparentes / (LARGURA * ALTURA)) * 100;
 
-    if (
+        (
 
-        porcentagem >= PORCENTAGEM_REVELAR &&
+            transparentes /
+
+            (LARGURA * ALTURA)
+
+        )
+
+        * 100;
+
+
+
+    if(
+
+        porcentagem >= PORCENTAGEM_REVELAR
+
+        &&
 
         !revelado
 
-    ) {
+    ){
+
 
         revelado = true;
 
+
         revelarResultado();
+
 
     }
 
-}
 
-/* ==========================================================
-   REVELAR PRÊMIO
-========================================================== */
-
-function revelarPremio() {
-
-    imagemPremio.style.display = "none";
-
-    textoPremio.textContent = "";
 
 }
 
 /* ==========================================================
-   RESULTADO
+   REVELAR RESULTADO
 ========================================================== */
 
-function revelarResultado() {
+function revelarResultado(){
 
-    if (!resultado) {
+
+    if(!resultado){
+
 
         mostrarDerrota();
+
 
         return;
 
+
     }
 
-    if (resultado.ganhou) {
 
-        mostrarVitoria(resultado);
 
-    } else {
+    if(resultado.ganhou){
+
+
+        mostrarVitoria(
+
+            resultado.premio
+
+        );
+
+
+    }else{
+
 
         mostrarDerrota();
 
+
     }
 
+
+
 }
+
+
 
 /* ==========================================================
    VITÓRIA
 ========================================================== */
 
-function mostrarVitoria(premio) {
+function mostrarVitoria(premio){
 
-    imagemPremio.style.display = "block";
 
-    imagemPremio.src = premio.imagem;
 
-    imagemPremio.alt = premio.nome;
+    imagemPremio.style.display =
 
-    textoPremio.textContent = premio.nome;
+        "block";
+
+
+
+    imagemPremio.src =
+
+        premio.imagem ||
+
+        "./img/premio.png";
+
+
+
+    imagemPremio.alt =
+
+        premio.nome;
+
+
+
+    textoPremio.textContent =
+
+        premio.nome;
+
+
 
     somVitoria();
 
+
+
     efeitoVitoria();
 
-    setTimeout(() => {
+
+
+    setTimeout(()=>{
+
+
 
         abrirModalPremio({
 
-            premio: premio.nome,
 
-            imagem: premio.imagem
+
+            premio:
+
+                premio.nome,
+
+
+
+            imagem:
+
+                premio.imagem
+
+
 
         });
 
-    }, 1200);
+
+
+    },1200);
+
+
 
 }
+
+
 
 /* ==========================================================
    DERROTA
 ========================================================== */
 
-function mostrarDerrota() {
+function mostrarDerrota(){
 
-    imagemPremio.style.display = "block";
 
-    imagemPremio.src = "./img/perdeu.png";
 
-    imagemPremio.alt = "Não foi desta vez";
+    imagemPremio.style.display =
 
-    textoPremio.textContent = "Não foi desta vez!";
+        "block";
+
+
+
+    imagemPremio.src =
+
+        "./img/perdeu.png";
+
+
+
+    imagemPremio.alt =
+
+        "Não foi desta vez";
+
+
+
+    textoPremio.textContent =
+
+        "Não foi desta vez!";
+
+
 
     somDerrota();
 
+
+
     efeitoDerrota();
 
+
+
 }
+
+
 
 /* ==========================================================
    LIMPAR CANVAS
 ========================================================== */
 
-function limparCanvas() {
+function limparCanvas(){
+
+
+
+    if(!ctx){
+
+        return;
+
+    }
+
+
 
     ctx.clearRect(
 
@@ -460,97 +1102,101 @@ function limparCanvas() {
 
     );
 
-    imagemPremio.removeAttribute("src");
 
-    imagemPremio.style.display = "none";
+
+    imagemPremio.removeAttribute(
+
+        "src"
+
+    );
+
+
+
+    imagemPremio.style.display =
+
+        "none";
+
+
 
     textoPremio.textContent = "";
 
+
+
     revelado = false;
+
+
 
     raspando = false;
 
+
+
     resultado = null;
+
+
+
+    participanteAtual = null;
+
+
 
 }
 
+
+
 /* ==========================================================
-   RESET
+   RESET MANUAL
 ========================================================== */
 
-export function resetarRaspadinha() {
+export function resetarRaspadinha(){
 
-    pararSom("raspar");
 
-    raspando = false;
 
-    revelado = false;
+    pararSom(
 
-    resultado = null;
+        "raspar"
 
-    imagemPremio.src = "";
+    );
 
-    imagemPremio.style.display = "none";
 
-    textoPremio.textContent = "";
+
+    limparCanvas();
+
+
 
     prepararCanvas();
 
+
+
 }
 
+
+
 /* ==========================================================
-   FECHAR AUTOMÁTICO
+   TECLA ESC FECHA
 ========================================================== */
 
-window.addEventListener("keydown", (e) => {
+window.addEventListener(
 
-    if (e.key === "Escape") {
+    "keydown",
 
-        fecharRaspadinha();
+    (evento)=>{
+
+
+
+        if(evento.key === "Escape"){
+
+
+            fecharRaspadinha();
+
+
+        }
+
+
 
     }
 
-});
+);
 
-/* ==========================================================
-   REINICIAR
-========================================================== */
 
-btnFechar.addEventListener("click", () => {
-
-    fecharRaspadinha();
-
-    setTimeout(() => {
-
-        resetarRaspadinha();
-
-    }, 300);
-
-});
-
-/* ==========================================================
-   BLOQUEAR DUPLO CLIQUE
-========================================================== */
-
-let processando = false;
-
-export async function iniciarNovaRaspagem() {
-
-    if (processando) return;
-
-    processando = true;
-
-    try {
-
-        await abrirRaspadinha();
-
-    } finally {
-
-        processando = false;
-
-    }
-
-}
 
 /* ==========================================================
    EXPORTAÇÕES
