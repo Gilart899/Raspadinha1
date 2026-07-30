@@ -66,3 +66,103 @@ export function pararSom(nome) {
     audio.currentTime = 0;
 
 }
+
+/* ==========================================================
+   VOLUME
+========================================================== */
+
+export function definirVolume(nome, volume) {
+
+    const audio = sons[nome];
+
+    if (!audio) return;
+
+    audio.volume = Math.max(0, Math.min(1, volume));
+
+}
+
+/* ==========================================================
+   PARAR TODOS
+========================================================== */
+
+export function pararTodos() {
+
+    Object.values(sons).forEach(audio => {
+
+        audio.pause();
+
+        audio.currentTime = 0;
+
+    });
+
+}
+
+/* ==========================================================
+   SONS PRONTOS
+========================================================== */
+
+export function somAbertura() {
+
+    tocarSom("abertura");
+
+}
+
+export function somVitoria() {
+
+    tocarSom("aplausos");
+
+}
+
+export function somDerrota() {
+
+    tocarSom("alarme");
+
+}
+
+export function somNotificacao() {
+
+    tocarSom("notificacoes");
+
+}
+
+export function somFechar() {
+
+    tocarSom("retorna");
+
+}
+
+/* ==========================================================
+   MUTE
+========================================================== */
+
+let mutado = false;
+
+export function ativarMute() {
+
+    mutado = true;
+
+    Object.values(sons).forEach(audio => {
+
+        audio.muted = true;
+
+    });
+
+}
+
+export function desativarMute() {
+
+    mutado = false;
+
+    Object.values(sons).forEach(audio => {
+
+        audio.muted = false;
+
+    });
+
+}
+
+export function estaMutado() {
+
+    return mutado;
+
+}
