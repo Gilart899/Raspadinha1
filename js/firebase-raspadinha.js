@@ -100,8 +100,7 @@ export async function carregarPremios(){
    SALVAR VENCEDOR
 ========================================================== */
 
-export async function salvarVencedor(participante,premio){
-
+export async function salvarVencedor(participante, premio, premioId) {
     const novo = push(
 
         ref(db,"vencedores")
@@ -229,8 +228,7 @@ export async function realizarSorteio(participante){
     }
 
     const premio = dados[premioId];
-
-    await salvarVencedor(
+await salvarVencedor(participante, premio, premioId);
 
         participante,
 
