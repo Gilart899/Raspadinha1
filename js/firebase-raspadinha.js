@@ -49,7 +49,7 @@ export async function jaJogou(cpf){
 
     const snap = await get(
 
-        child(ref(db),"tentativas/" + cpf)
+       ref(db, `participantes/${cpf}`)
 
     );
 
@@ -63,23 +63,16 @@ export async function jaJogou(cpf){
 
 export async function registrarTentativa(participante){
 
-    await set(
+ await set(novo, {
+    nome: participante.nome,
+    cpf: participante.cpf,
+    telefone: participante.telefone,
 
-        ref(db,"tentativas/" + participante.cpf),
+    premio: premio.nome,
+    premioId: premioId,
 
-        {
-
-            nome: participante.nome,
-
-            cpf: participante.cpf,
-
-            telefone: participante.telefone,
-
-            data: serverTimestamp(),
-
-            ganhou:false
-
-        }
+    data: serverTimestamp()
+});
 
     );
 
