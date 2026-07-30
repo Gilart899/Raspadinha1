@@ -1,35 +1,133 @@
-// ===========================================
-// PRÊMIOS
-// ===========================================
+/* ==========================================================
+   RASPADINHA DA AMIZADE
+   Gerenciador de Prêmios
+========================================================== */
+
+import { getDB } from "./firebase.js";
 
 import {
-    ler,
-    atualizar
-} from "./firebase-raspadinha.js";
+
+    ref,
+
+    onValue
+
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+/* ==========================================================
+   ELEMENTOS
+========================================================== */
+
+const imgFerro =
+    document.querySelector(".card:first-child img");
+
+const imgLiquidificador =
+    document.querySelector(".card:last-child img");
+
+const tituloFerro =
+    document.querySelector(".card:first-child h2");
+
+const tituloLiquidificador =
+    document.querySelector(".card:last-child h2");
+
+/* ==========================================================
+   DADOS
+========================================================== */
 
 let premios = {};
 
-// ===========================================
+/* ==========================================================
+   CARREGAR PRÊMIOS
+========================================================== */
 
-export async function carregarPremios() {
+export function carregarPremios() {
 
-    const dados = await ler("premios");
+    const db = getDB();
 
-    premios = dados || {};
+    const premiosRef = ref(db, "premios");
 
-    return premios;
+    onValue(premiosRef, (snapshot) => {
+
+        premios = snapshot.val() || {};
+
+        atualizarTela();
+
+    });
 
 }
 
-// ===========================================
+/* ==========================================================
+   ATUALIZAR TELA
+========================================================== */
 
-export function obterPremios() {
+function atualizarTela() {
 
-    return premios;
+    if (premios.ferro) {
+
+        tituloFerro.textContent =
+            premios.ferro.nome;
+
+        imgFerro.src =
+            premios.ferro.imagem;
+
+    }
+
+    if (premios.liquidificador) {
+
+        tituloLiquidificador.textContent =
+            premios.liquidificador.nome;
+
+        imgLiquidificador.src =
+            premios.liquidificador.imagem;
+
+    }
 
 }
 
-// ===========================================
+/* ==========================================================
+   ESTOQUE DOS PRÊMIOS
+========================================================== */
+
+function atualizarEstoque() {
+
+    atualizarCard(
+        document.querySelector(".card:first-child"),
+        premios.ferro
+    );
+
+    atualizarCard(
+        document.querySelector(".card:last-child"),
+        premios.liquidificador
+    );
+
+}
+
+function atualizarCard(card, premio) {
+
+    if (!card || !premio) return;
+
+    if (premio.quantidade <= 0) {
+
+        card.classList.add("esgotado");
+
+        const titulo = card.querySelector("h2");
+
+        if (titulo) {
+
+            titulo.textContent = "ESGOTADO";
+
+        }
+
+    } else {
+
+        card.classList.remove("esgotado");
+
+    }
+
+}
+
+/* ==========================================================
+   CONSULTAS
+========================================================== */
 
 export function obterPremio(id) {
 
@@ -37,67 +135,56 @@ export function obterPremio(id) {
 
 }
 
-// ===========================================
+export function temPremiosDisponiveis() {
 
-export function listarDisponiveis() {
+    return Object.values(premios)
 
-    return Object.entries(premios)
-        .filter(([_, premio]) => premio.quantidade > 0)
-        .map(([id, premio]) => ({
-            id,
-            ...premio
-        }));
+        .some(premio => premio.quantidade > 0);
 
 }
 
-// ===========================================
+/* ==========================================================
+   LISTA
+========================================================== */
 
-export async function diminuirEstoque(id) {
+export function listarPremios() {
 
-    if (!premios[id]) {
-        throw new Error(`Prêmio '${id}' não encontrado.`);
-    }
-
-    if (premios[id].quantidade <= 0) {
-        return false;
-    }
-
-    premios[id].quantidade--;
-
-    await atualizar(`premios/${id}`, {
-        quantidade: premios[id].quantidade
-    });
-
-    return true;
+    return premios;
 
 }
 
-// ===========================================
+/* ==========================================================
+   ATUALIZAÇÃO
+========================================================== */
 
-export async function atualizarPremio(id, dados) {
+function atualizarTela() {
 
-    if (!premios[id]) {
+    if (premios.ferro) {
 
-        premios[id] = {};
+        tituloFerro.textContent =
+            premios.ferro.nome;
+
+        imgFerro.src =
+            premios.ferro.imagem;
 
     }
 
-    premios[id] = {
-        ...premios[id],
-        ...dados
-    };
+    if (premios.liquidificador) {
 
-    await atualizar(`premios/${id}`, dados);
+        tituloLiquidificador.textContent =
+            premios.liquidificador.nome;
 
-}
+        imgLiquidificador.src =
+            premios.liquidificador.imagem;
 
-// ===========================================
+    }
 
-export function premioDisponivel(id) {
-
-    return !!(
-        premios[id] &&
-        premios[id].quantidade > 0
-    );
+    atualizarEstoque();
 
 }
+
+/* ==========================================================
+   INICIALIZAÇÃO
+========================================================== */
+
+carregarPremios();
