@@ -1,167 +1,190 @@
 /* ==========================================================
    RASPADINHA DA AMIZADE
-   Canvas da Raspadinha
+   Gerenciador de Prêmios
 ========================================================== */
 
-import { realizarSorteio } from "./firebase-raspadinha.js";
-import { abrirModalPremio } from "./modal-premio.js";
-import { tocarSom, pararSom } from "./sounds.js";
+import { getDB } from "./firebase.js";
+
+import {
+
+    ref,
+
+    onValue
+
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
 /* ==========================================================
    ELEMENTOS
 ========================================================== */
 
-const modal = document.getElementById("modal");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d", { willReadFrequently: true });
+const imgFerro =
+    document.querySelector(".card:first-child img");
 
-const imagemPremio = document.getElementById("imagemPremio");
-const textoPremio = document.getElementById("textoPremio");
+const imgLiquidificador =
+    document.querySelector(".card:last-child img");
 
-const btnFechar = document.getElementById("fechar");
+const tituloFerro =
+    document.querySelector(".card:first-child h2");
 
-/* ==========================================================
-   VARIÁVEIS
-========================================================== */
-
-let largura = 320;
-let altura = 320;
-
-let raspando = false;
-let resultado = null;
-let revelado = false;
+const tituloLiquidificador =
+    document.querySelector(".card:last-child h2");
 
 /* ==========================================================
-   INICIAR
+   DADOS
 ========================================================== */
 
-export async function iniciarRaspadinha() {
+let premios = {};
 
-    modal.classList.remove("hidden");
+/* ==========================================================
+   CARREGAR PRÊMIOS
+========================================================== */
 
-    canvas.width = largura;
-    canvas.height = altura;
+export function carregarPremios() {
 
-    desenharCamada();
+    const db = getDB();
 
-    configurarEventos();
+    const premiosRef = ref(db, "premios");
 
-    revelado = false;
+    onValue(premiosRef, (snapshot) => {
 
-    resultado = await realizarSorteio();
+        premios = snapshot.val() || {};
+
+        atualizarTela();
+
+    });
 
 }
 
 /* ==========================================================
-   CAMADA CINZA
+   ATUALIZAR TELA
 ========================================================== */
 
-function desenharCamada() {
+function atualizarTela() {
 
-    ctx.globalCompositeOperation = "source-over";
+    if (premios.ferro) {
 
-    ctx.fillStyle = "#A9A9A9";
+        tituloFerro.textContent =
+            premios.ferro.nome;
 
-    ctx.fillRect(0, 0, largura, altura);
+        imgFerro.src =
+            premios.ferro.imagem;
 
-    ctx.fillStyle = "#666";
+    }
 
-    ctx.font = "bold 28px Arial";
+    if (premios.liquidificador) {
 
-    ctx.textAlign = "center";
+        tituloLiquidificador.textContent =
+            premios.liquidificador.nome;
 
-    ctx.fillText(
+        imgLiquidificador.src =
+            premios.liquidificador.imagem;
 
-        "RASPE AQUI",
+    }
 
-        largura / 2,
+}
 
-        altura / 2
+/* ==========================================================
+   ESTOQUE DOS PRÊMIOS
+========================================================== */
 
+function atualizarEstoque() {
+
+    atualizarCard(
+        document.querySelector(".card:first-child"),
+        premios.ferro
+    );
+
+    atualizarCard(
+        document.querySelector(".card:last-child"),
+        premios.liquidificador
     );
 
 }
 
-/* ==========================================================
-   EVENTOS
-========================================================== */
+function atualizarCard(card, premio) {
 
-function configurarEventos() {
+    if (!card || !premio) return;
 
-    canvas.addEventListener("mousedown", iniciar);
+    if (premio.quantidade <= 0) {
 
-    canvas.addEventListener("mousemove", mover);
+        card.classList.add("esgotado");
 
-    window.addEventListener("mouseup", parar);
+        const titulo = card.querySelector("h2");
 
-    canvas.addEventListener("touchstart", iniciarTouch);
+        if (titulo) {
 
-    canvas.addEventListener("touchmove", moverTouch);
+            titulo.textContent = "ESGOTADO";
 
-    window.addEventListener("touchend", parar);
+        }
 
-}
+    } else {
 
-/* ==========================================================
-   MOUSE
-========================================================== */
+        card.classList.remove("esgotado");
 
-function iniciar(e) {
-
-    raspando = true;
-
-    tocarSom("raspar");
-
-    raspar(e.offsetX, e.offsetY);
-
-}
-
-function mover(e) {
-
-    if (!raspando) return;
-
-    raspar(e.offsetX, e.offsetY);
+    }
 
 }
 
 /* ==========================================================
-   TOUCH
+   CONSULTAS
 ========================================================== */
 
-function iniciarTouch(e) {
+export function obterPremio(id) {
 
-    e.preventDefault();
-
-    raspando = true;
-
-    tocarSom("raspar");
-
-    const p = posicaoTouch(e);
-
-    raspar(p.x, p.y);
+    return premios[id] || null;
 
 }
 
-function moverTouch(e) {
+export function temPremiosDisponiveis() {
 
-    e.preventDefault();
+    return Object.values(premios)
 
-    if (!raspando) return;
-
-    const p = posicaoTouch(e);
-
-    raspar(p.x, p.y);
+        .some(premio => premio.quantidade > 0);
 
 }
 
 /* ==========================================================
-   PARAR
+   LISTA
 ========================================================== */
 
-function parar() {
+export function listarPremios() {
 
-    raspando = false;
-
-    pararSom("raspar");
+    return premios;
 
 }
+
+/* ==========================================================
+   ATUALIZAÇÃO
+========================================================== */
+
+function atualizarTela() {
+
+    if (premios.ferro) {
+
+        tituloFerro.textContent =
+            premios.ferro.nome;
+
+        imgFerro.src =
+            premios.ferro.imagem;
+
+    }
+
+    if (premios.liquidificador) {
+
+        tituloLiquidificador.textContent =
+            premios.liquidificador.nome;
+
+        imgLiquidificador.src =
+            premios.liquidificador.imagem;
+
+    }
+
+    atualizarEstoque();
+
+}
+
+/* ==========================================================
+   INICIALIZAÇÃO
+========================================================== */
+
+carregarPremios();
